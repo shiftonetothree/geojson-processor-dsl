@@ -132,9 +132,9 @@ const toProvinceCount: BiQuery = {
             inputs:[
                 {
                     id: "middle2",
-                    type: "multiPoint",
+                    type: "multiPolygon",
                     stage: "middle",
-                } as MultiPointData
+                } as MultiPolygonData
             ],
             output:{
                 id: "result",
