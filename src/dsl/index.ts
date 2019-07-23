@@ -151,10 +151,10 @@ type Shape = "circle" | "triangle" | "square" | "point" | "raster" | "line";
 
 /**
  * 数学表达式
- * 内容中非数字符号一律作为属性名处理
- * @example property + 12 * 1
+ * 内容中非数学符号一律作为属性名处理
+ * @example ["property", "+", 12, "*", 1]
  */
-type MathExpr = string;
+type MathExpr = (string|number)[];
 
 /** 各种类型的pip的参数合法性 */
 export const inputOutputTypes={

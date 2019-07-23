@@ -7,11 +7,12 @@ test("transform", () => {
     expect({})
 });
 
+/** 将低等级行政区划显示为点 */
 const toPoint: BiQuery = {
     processes:[
         {
             inputs:[{
-                id: "1",
+                id: "start",
                 type: "multiPolygon",
                 stage: "origin",
                 origin: "农业部，信息处第一张表",
@@ -22,7 +23,7 @@ const toPoint: BiQuery = {
                 toShapeMethod: "governmentCentre",
             } as Transform,
             output:{
-                id: "1",
+                id: "result",
                 type: "multiPoint",
                 stage: "final",
             } as MultiPointData,
@@ -30,6 +31,7 @@ const toPoint: BiQuery = {
     ],
 }
 
+/** 将低等级行政区划显示成柱状图 */
 const toSquare: BiQuery = {
     processes:[
         {
@@ -72,6 +74,7 @@ const toSquare: BiQuery = {
     ],
 }
 
+/** 按高等级行政区划统计数据 */
 const toProvinceCount: BiQuery = {
     processes:[
         {
@@ -124,7 +127,7 @@ const toProvinceCount: BiQuery = {
         {
             pip: {
                 type: "filterByProperty",
-                filterByProperty: "大型动物总数量 > 100",
+                filterByProperty: ["大型动物总数量", ">", 100],
             } as FilterByProperty,
             inputs:[
                 {
