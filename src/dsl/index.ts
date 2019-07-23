@@ -18,8 +18,6 @@ export interface BiQuery {
  */
 export interface Pip {
   type: "transform" | "merge" | "filter" | "attach" | "filterByProperty";
-  inputs: Data[];
-  outputs: Data;
 }
 
 /**
@@ -32,7 +30,7 @@ export interface Pip {
  */
 export interface Transform extends Pip {
   type: "transform";
-  inputs: [Data];
+
   /**
    * 只在 `inputs` 是 `[PointData]` 时有效
    *
@@ -73,7 +71,6 @@ export interface Transform extends Pip {
    * @memberof Transform
    */
   toShapeMethod: "geometricCenter" | "governmentCentre";
-  outputs: Data;
 }
 
 /**
@@ -88,33 +85,26 @@ export interface Merge extends Pip {
   type: "merge";
   conditions: Relation[];
   merge: {
-    property: Calculation;
+    [property: string]: Calculation;
   };
-  inputs: [Data, Data];
-  outputs: Data;
 }
 
 export interface Attach extends Pip {
   type: "attach";
   attach: {
-    property: MathExpr;
+    [property: string]: MathExpr;
   };
-  inputs: [Data];
-  outputs: Data;
+  
 }
 
 export interface Filter extends Pip {
   type: "filter";
   filter: Relation[];
-  inputs: [Data, Data];
-  outputs: Data;
 }
 
 export interface FilterByProperty extends Pip {
   type: "filterByProperty";
   filterByProperty: MathExpr;
-  inputs: [Data, Data];
-  outputs: Data;
 }
 
 /**
@@ -127,6 +117,7 @@ export interface FilterByProperty extends Pip {
 export interface Process {
   inputs: Data[];
   pip: Pip;
+  output: Data;
 }
 
 export interface Data {
@@ -156,7 +147,7 @@ type Relation = "intersect" | "notIntersect" | "contains" | "contained";
 
 type Calculation = "sum" | "average" | "maximum" | "minimum" | "median" | "concat";
 
-type Shape = "circle" | "triangle" | "square" | "point" | "raster";
+type Shape = "circle" | "triangle" | "square" | "point" | "raster" | "line";
 
 /**
  * 数学表达式
@@ -164,3 +155,27 @@ type Shape = "circle" | "triangle" | "square" | "point" | "raster";
  * @example property + 12 * 1
  */
 type MathExpr = string;
+
+/** 各种类型的pip的参数合法性 */
+export const inputOutputTypes={
+  transform:{
+    inputTypes: [["multiPoint" ,"multiPolygon" , "multiLineString" , "raster"],["multiPoint" ,"multiPolygon" , "multiLineString" , "raster"]],
+    outputTypes: ["multiPoint" ,"multiPolygon" , "multiLineString" , "raster"],
+  },
+  merge:{
+    inputTypes: [["multiPoint" ,"multiPolygon" , "multiLineString"],["multiPoint" ,"multiPolygon" , "multiLineString"]],
+    outputTypes: ["multiPoint" ,"multiPolygon" , "multiLineString"],
+  },
+  attach:{
+    inputTypes: [["multiPoint" ,"multiPolygon" , "multiLineString"]],
+    outputTypes: ["multiPoint" ,"multiPolygon" , "multiLineString"],
+  },
+  filter:{
+    inputTypes: [["multiPoint" ,"multiPolygon" , "multiLineString" , "raster"],["multiPoint" ,"multiPolygon" , "multiLineString"]],
+    outputTypes: ["multiPoint" ,"multiPolygon" , "multiLineString" , "raster"],
+  },
+  filterByProperty:{
+    inputTypes: [["multiPoint" ,"multiPolygon" , "multiLineString"],["multiPoint" ,"multiPolygon" , "multiLineString"]],
+    outputTypes: ["multiPoint" ,"multiPolygon" , "multiLineString"],
+  }
+}
